@@ -6,7 +6,7 @@ This project will analyse my daily commute from Kildare into Dublin Heuston. I w
 
 
 # CSV File
-My CSV contains 12 attributes
+My CSV contains 13 attributes
 
 | Column | Type of Data | Purpose |
 |---|---|---|
@@ -22,3 +22,4 @@ My CSV contains 12 attributes
 | Actual_arrival_time | Numerical / Time | The when the train actually reachs my_destionation |
 | Previous_stops | Numerical | The number before my_origin |
 | Later_stops | Numerical | Number of stops between my_origin and my_destination |
+| Comments | String | An additional column to account for anything that might delay the train significantly and potentially skew the results |
