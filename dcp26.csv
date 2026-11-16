@@ -30,3 +30,7 @@ ID,Date,my_origin,train_origin,my_destionation,train_destination,due_time,actual
 29,11/11/2026,Kildare,Waterford,Dublin Heuston,Dublin Heuston,09:36,09:37,10:05,10:07,5,0,
 30,11/11/2026,Dublin Heuston,Dublin Heuston,Kildare,Carlow,12:25,12:25,12:52,12:55,0,1,
 31,12/11/2026,Kildare,Portlaoise,Dublin Heuston,Dublin Heuston,07:10,07:09,07:47,07:50,2,2,
+32,12/11/2026,Dublin Heuston,Dublin Heuston,Kildare,Waterford,17:35,17:35,18:06,18:10,0,1,
+33,13/11/2026,Kildare,Portlaoise,Dublin Heuston,Dublin Heuston,07:10,07:12,07:47,07:50,2,2,
+34,13/11/2026,Dublin Heuston,Dublin Heuston,Kildare,Carlow,12:25,12:25,12:52,12:56,0,1,
+35,16/11/2026,Kildare,Waterford,Dublin Heuston,Dublin Heuston,09:36,09:52,10:05,10:19,5,0,
