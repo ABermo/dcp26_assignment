@@ -2,7 +2,7 @@
 Assignment for Data Centric Programming 2026
 
 # Description
-This project will analyse my daily commute from Kildare into Dublin Heuston. I will be comparing the actual arrival time of trains compared to their scheduled times, the origin of the train, the amount of stops before and after my destination and also the actual arrival time in comparison to the expected one.
+This project will analyse my daily commute from Kildare into Dublin Heuston. I will be comparing the actual arrival time of trains compared to their scheduled times, the origin of the train, the amount of stops before and after my destination and also the actual arrival time in comparison to the expected one. The hope of this assignment is that I will find / pinpoint the major cause of delays when it comes to train delays during myy commute.
 
 
 # CSV File
