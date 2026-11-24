@@ -64,6 +64,19 @@ def look_over():
             df = pd.read_sql(f"SELECT * FROM train_times WHERE due_time = ? OR arrival_time = ?", conn, params=(time,time,))
                         
             display(df)
+    elif (opt == '3'):
+        print("What station are you interested in")
+        cho = input("")
+        
+        df = pd.read_sql(f"SELECT * FROM train_times WHERE my_destination = ? or train_destination = ?", conn, params=(cho,cho,))
+        display(df)
+    elif (opt == '4'):
+        print("What station are you interested in")
+        cho = input("")
+            
+        df = pd.read_sql(f"SELECT * FROM train_times WHERE my_origin = ? or train_origin = ?", conn, params=(cho,cho,))
+        display(df)
+        
 def display(df):
     choice = ""
     i = 0
