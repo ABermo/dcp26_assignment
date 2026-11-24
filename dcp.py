@@ -19,39 +19,45 @@ def data_connect():
 
 def menu():
     data_connect()
-    print("Welcome to Data Centric Programming Project!")
-    print("What would like to do?")
-    print("\t1. View Raw Data")
-    print("\t2. Look at Charts")
-    print("\t3. Quit")
+    opt = ""
     
-    opt = input("")
-    
-    while opt not in ('1', '2', '3'):
-        print("Invalid Option")
+    while opt != '3':
+        print("Welcome to Data Centric Programming Project!")
+        print("What would like to do?")
+        print("\t1. View Raw Data")
+        print("\t2. Look at Charts")
+        print("\t3. Quit")
+        
         opt = input("")
+        
+        while opt not in ('1', '2', '3'):
+            print("Invalid Option")
+            opt = input("")
+        
+        if (opt == '3'): return
+        elif (opt == '1'): look_over()
+        elif (opt == '2'): chart_menu()
     
-    if (opt == '3'): return
-    elif (opt == '1'): look_over()
-    elif (opt == '2'): chart_menu()
-    
-    menu()
 
 def chart_menu():
     print("What graph would you like to see: ")
     print("\t1. Pick Up Delays")
     print("\t2. Drop Off Delays")
+    print("\t3. Delays Overall")
     
     opt = input("")
     
-    while (opt not in ('1', '2')):
+    while (opt not in ('1', '2', '3')):
         print("Invalid Option")
         opt = input("")
     
     if (opt == '1'): delay_pickup_bar_graph()
     elif (opt == '2'): delay_arrival_bar_graph()
+    elif (opt == '3'): delay_bar_graph()
     
-    menu()
+    plt.show()
+    
+
 
 def look_over():
     print("Would you like to look over: ")
@@ -189,7 +195,8 @@ def delay_pickup_bar_graph():
     plt.xlabel("ID")
     plt.ylabel("Delay (Minutes)")
     plt.title("Train Pick Up Delay")
-    plt.show()
+    
+    return (due_times_delay, colours)
 
 def delay_arrival_bar_graph():
     df = pd.read_sql("SELECT ID, arrival_time, actual_arrival_time FROM train_times", conn)
@@ -223,6 +230,25 @@ def delay_arrival_bar_graph():
     plt.xlabel("ID")
     plt.ylabel("Delay (Minutes)")
     plt.title("Train Drop Off Delay")
-    plt.show()
     
+    return (arrival_times_delay, colours)
+
+def delay_bar_graph():
+    df = pd.read_sql("SELECT ID FROM train_times", conn)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+    due_time_delay, coloursDue = delay_pickup_bar_graph()
+    arrival_time_delay, coloursArrival = delay_arrival_bar_graph()
+    ids = df['ID']
+    
+    ax1.bar(ids, due_time_delay, color=coloursDue)
+    ax1.set_xlabel("ID")
+    ax1.set_ylabel("Delay (Minutes)")
+    ax1.set_title("Train Pick Up Delay")
+
+    ax2.bar(ids, arrival_time_delay, color=coloursArrival)
+    ax2.set_xlabel("ID")
+    ax2.set_ylabel("Delay (Minutes)")
+    ax2.set_title("Train Drop Off Delay")
+
 menu()
