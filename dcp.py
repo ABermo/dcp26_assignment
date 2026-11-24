@@ -15,6 +15,43 @@ def data_connect():
         df = pd.read_csv(CSV)
         df.to_sql('train_times', conn, if_exists='replace', index=False)
     
+    
+
+def menu():
+    data_connect()
+    print("Welcome to Data Centric Programming Project!")
+    print("What would like to do?")
+    print("\t1. View Raw Data")
+    print("\t2. Look at Charts")
+    print("\t3. Quit")
+    
+    opt = input("")
+    
+    while opt not in ('1', '2', '3'):
+        print("Invalid Option")
+        opt = input("")
+    
+    if (opt == '3'): return
+    elif (opt == '1'): look_over()
+    elif (opt == '2'): chart_menu()
+    
+    menu()
+
+def chart_menu():
+    print("What graph would you like to see: ")
+    print("\t1. Pick Up Delays")
+    print("\t2. Drop Off Delays")
+    
+    opt = input("")
+    
+    while (opt not in ('1', '2')):
+        print("Invalid Option")
+        opt = input("")
+    
+    if (opt == '1'): delay_pickup_bar_graph()
+    elif (opt == '2'): delay_arrival_bar_graph()
+    
+    menu()
 
 def look_over():
     print("Would you like to look over: ")
@@ -188,5 +225,4 @@ def delay_arrival_bar_graph():
     plt.title("Train Drop Off Delay")
     plt.show()
     
-data_connect()
-delay_arrival_bar_graph()
+menu()
