@@ -8,15 +8,69 @@ def data_connect():
     global conn
     conn = sql.connect("trains.db")
     
+    # Create Database
     if os.path.exists(CSV):
         df = pd.read_csv(CSV)
         df.to_sql('train_times', conn, if_exists='replace', index=False)
     
 
-data_connect()
-query = conn.execute("SELECT * FROM train_times")
-
-for row in query:
-    print(row)
+def look_over():
+    print("Would you like to look over: ")
+    print("\t1. All")
+    print("\t2. Certain Time")
+    print("\t3. Certain Station Arrival")
+    print("\t4. Certain Station Destination")
     
-conn.close()
+    # Keeping as string as to prevent program crashing when they enter a letter
+    opt = input("")
+    
+    while (opt not in ('1','2','3','4')):
+        print("Invalid option")
+        print("Would you like to look over: ")
+        print("\t1. All")
+        print("\t2. Certain Time")
+        print("\t3. Certain Station Arrival")
+        print("\t4. Certain Station Destination")
+        
+        opt = input("")
+    
+    if (opt == '1'):
+        df = pd.read_sql("SELECT * FROM train_times", conn)
+
+        display(df)
+
+def display(df):
+    choice = ""
+    i = 0
+    
+    print("Press enter to go next")
+    print("Press b to go back")
+    print("Press q to exit\n")
+    
+    while (i < len(df) and choice != 'q'):
+        print(f"ID: {df['ID'][i]}")
+        print(f"Origin: {df['train_origin'][i]}")
+        print(f"My Origin: {df['my_origin'][i]}")
+        print(f"Train Destination: {df['train_destination'][i]}")
+        print(f"My Destionation: {df['my_destination'][i]}")
+        print(f"Scheduled Pick Up Time: {df['due_time'][i]}")
+        print(f"Actual Pick Up Time: {df['actual_due_time'][i]}")
+        print(f"Arrival Time: {df['arrival_time'][i]}")
+        print(f"Actual Arrival Time: {df['actual_arrival_time'][i]}")
+        print(f"Stops Before My Origin: {df['previous_stops'][i]}")
+        print(f"Stops After My Origin: {df['later_stops'][i]}")
+        
+        choice = input("")
+        if (choice == 'b'):
+            i -= 1
+        else:
+            i += 1
+
+        # In case they press b on the first value
+        if i < 0:
+            i = 0
+    
+    if (i == len(df)):
+        print("Looked through the full dataset")
+data_connect()
+look_over()
