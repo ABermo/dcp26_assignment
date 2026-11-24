@@ -44,16 +44,20 @@ def chart_menu():
     print("\t1. Pick Up Delays")
     print("\t2. Drop Off Delays")
     print("\t3. Delays Overall")
+    print("\t4. Pick Up Delay Per Stop")
+    print("\t5. Drop Off Delay Per Stop")
     
     opt = input("")
     
-    while (opt not in ('1', '2', '3')):
+    while (opt not in ('1', '2', '3', '4', '5')):
         print("Invalid Option")
         opt = input("")
     
     if (opt == '1'): delay_pickup_bar_graph()
     elif (opt == '2'): delay_arrival_bar_graph()
     elif (opt == '3'): delay_bar_graph()
+    elif (opt == '4'): due_delay_stop()
+    elif (opt == '5'): arrival_delay_stop()
     
     plt.show()
     
@@ -251,4 +255,36 @@ def delay_bar_graph():
     ax2.set_ylabel("Delay (Minutes)")
     ax2.set_title("Train Drop Off Delay")
 
+def due_delay_stop():
+    df = pd.read_sql("SELECT ID, previous_stops FROM train_times", conn)
+    
+    ids = df['ID']
+    due_times, colours = delay_pickup_bar_graph()
+    delay_per_stop = []
+    
+    for i in range(len(due_times)):
+        delay_per_stop.append(due_times[i] / (df['previous_stops'][i] + 1))
+    
+    plt.bar(ids, delay_per_stop, color = colours)
+    
+    plt.xlabel("ID")
+    plt.ylabel("Delay (Minutes)")
+    plt.title("Delay per Stop before Pick Up")
+
+def arrival_delay_stop():
+    df = pd.read_sql("SELECT ID, later_stops FROM train_times", conn)
+    
+    ids = df['ID']
+    due_times, colours = delay_arrival_bar_graph()
+    delay_per_stop = []
+    
+    for i in range(len(due_times)):
+        delay_per_stop.append(due_times[i] / (df['later_stops'][i] + 1))
+    
+    plt.bar(ids, delay_per_stop, color = colours)
+    
+    plt.xlabel("ID")
+    plt.ylabel("Delay (Minutes)")
+    plt.title("Delay per Stop after Pick Up")
+    
 menu()
