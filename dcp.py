@@ -3,7 +3,6 @@ import pandas as pd
 import sqlite3 as sql
 from datetime import datetime as dt
 import matplotlib.pyplot as plt
-import statistics as st
 
 CSV = "dcp26.csv"
 
@@ -121,7 +120,7 @@ def delay_calc(scheduled, actual):
     delay = actual - scheduled
     return int(delay.total_seconds() / 60)
 
-def delay_bar_graph():
+def delay_pickup_bar_graph():
     df = pd.read_sql("SELECT ID, due_time, actual_due_time FROM train_times", conn)
     
     ids = df['ID']
@@ -155,5 +154,39 @@ def delay_bar_graph():
     plt.title("Train Pick Up Delay")
     plt.show()
 
+def delay_arrival_bar_graph():
+    df = pd.read_sql("SELECT ID, arrival_time, actual_arrival_time FROM train_times", conn)
+    
+    ids = df['ID']
+    arrival_times = df['arrival_time']
+    actual_arrival_times = df['actual_arrival_time']
+    arrival_times_delay = []
+    colours = []
+    
+    for i in range(len(arrival_times)):
+        arrival_times_delay.append(delay_calc(arrival_times[i], actual_arrival_times[i]))
+        
+    for delay in arrival_times_delay:
+        if delay < 3:
+            colours.append("#0b4f09")
+        elif delay < 7:
+            colours.append('#2f8f2e')
+        elif delay < 10:
+            colours.append('#9bc924')
+        elif delay < 15:
+            colours.append("#D09235")
+        elif delay < 20:
+            colours.append("#C74B38")
+        else:
+            colours.append("#FF0000")
+            
+        
+    plt.bar(ids, arrival_times_delay, color = colours)
+
+    plt.xlabel("ID")
+    plt.ylabel("Delay (Minutes)")
+    plt.title("Train Drop Off Delay")
+    plt.show()
+    
 data_connect()
-delay_bar_graph()
+delay_arrival_bar_graph()
