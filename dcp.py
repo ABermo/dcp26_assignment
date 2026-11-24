@@ -38,7 +38,32 @@ def look_over():
         df = pd.read_sql("SELECT * FROM train_times", conn)
 
         display(df)
+    elif (opt == '2'):
+        print("Are you interested in: ")
+        print("\tP. Pick Up Time")
+        print("\tA. Arrival Time")
+        print("\tB. Both")
+        
+        cho = input("")
+        while (cho.lower() not in ('p', 'a', 'b')):
+            print("Invalid Option")
+            cho = input("")
 
+        print("What time are you interested in? Leave in HH:MM form: ")
+        time = input("")
+        
+        if (cho.lower() == 'p'):
+            df = pd.read_sql(f"SELECT * FROM train_times WHERE due_time = ?", conn, params=(time,))
+            
+            display(df)
+        elif (cho.lower() == 'a'):
+            df = pd.read_sql(f"SELECT * FROM train_times WHERE arrival_time = ?", conn, params=(time,))
+                        
+            display(df)
+        elif (cho.lower() == 'b'):
+            df = pd.read_sql(f"SELECT * FROM train_times WHERE due_time = ? OR arrival_time = ?", conn, params=(time,time,))
+                        
+            display(df)
 def display(df):
     choice = ""
     i = 0
