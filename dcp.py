@@ -46,10 +46,11 @@ def chart_menu():
     print("\t3. Delays Overall")
     print("\t4. Pick Up Delay Per Stop")
     print("\t5. Drop Off Delay Per Stop")
+    print("\t6. Overall Delays Per Stop")
     
     opt = input("")
     
-    while (opt not in ('1', '2', '3', '4', '5')):
+    while (opt not in ('1', '2', '3', '4', '5', '6')):
         print("Invalid Option")
         opt = input("")
     
@@ -58,6 +59,7 @@ def chart_menu():
     elif (opt == '3'): delay_bar_graph()
     elif (opt == '4'): due_delay_stop()
     elif (opt == '5'): arrival_delay_stop()
+    elif (opt == '6'): overall_delays()
     
     plt.show()
     
@@ -260,31 +262,59 @@ def due_delay_stop():
     
     ids = df['ID']
     due_times, colours = delay_pickup_bar_graph()
+    plt.close()
     delay_per_stop = []
     
     for i in range(len(due_times)):
         delay_per_stop.append(due_times[i] / (df['previous_stops'][i] + 1))
     
+    plt.figure()
     plt.bar(ids, delay_per_stop, color = colours)
     
     plt.xlabel("ID")
     plt.ylabel("Delay (Minutes)")
     plt.title("Delay per Stop before Pick Up")
+    
+    return delay_per_stop, colours
 
 def arrival_delay_stop():
-    df = pd.read_sql("SELECT ID, later_stops FROM train_times", conn)
+    df = pd.read_sql("SELECT ID, previous_stops, later_stops FROM train_times", conn)
     
     ids = df['ID']
     due_times, colours = delay_arrival_bar_graph()
+    plt.close() # Stop previous graph from loading
     delay_per_stop = []
     
     for i in range(len(due_times)):
-        delay_per_stop.append(due_times[i] / (df['later_stops'][i] + 1))
+        delay_per_stop.append(due_times[i] / (df['previous_stops'][i] + df['later_stops'][i] + 1))
     
+    plt.figure()
     plt.bar(ids, delay_per_stop, color = colours)
     
     plt.xlabel("ID")
     plt.ylabel("Delay (Minutes)")
     plt.title("Delay per Stop after Pick Up")
     
+    return delay_per_stop, colours
+
+def overall_delays():
+    df = pd.read_sql("SELECT ID FROM train_times", conn)
+    
+    due_time_delay, coloursDue = due_delay_stop()
+    arrival_time_delay, coloursArrival = arrival_delay_stop()
+    plt.close()
+    ids = df['ID']
+        
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    ax1.bar(ids, due_time_delay, color=coloursDue)
+    ax1.set_xlabel("ID")
+    ax1.set_ylabel("Delay (Minutes)")
+    ax1.set_title("Delay per Stop before Pick Up")
+    
+    ax2.bar(ids, arrival_time_delay, color=coloursArrival)
+    ax2.set_xlabel("ID")
+    ax2.set_ylabel("Delay (Minutes)")
+    ax2.set_title("Delay per Stop after Pick Up")
+    
+    plt.tight_layout()
 menu()
